@@ -71,3 +71,42 @@ class _ContactsPageState extends State<ContactsPage>{
     Contact({required this.name, required this.email, required this.city});
     
   } 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  Widget _construirLinha(WordPair par) {
+    final bool jaFoiSalva = _salvos.contains(par);
+    return ListTile(
+      title: Text(
+        par.asPascalCase,
+        style: _tamanhoDaFonte,
+      ),
+      trailing: Icon(
+        jaFoiSalva ? Icons.favorite : Icons.favorite_border,
+        color: jaFoiSalva ? Colors.red : null,
+      ),
+      onTap: () {                  // adicionar a partir daqui
+        setState(() {
+          if (jaFoiSalva) {
+            _salvos.remove(par);
+          } else {
+            _salvos.add(par);
+          }
+        });
+      },                           // até aqui
+    );
+  }
