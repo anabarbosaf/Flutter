@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+
+void main(){
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget{
+  const MyApp({super.key});
+  
+  @override
+  Widget build(BuildContext context){
+    return MaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      home: ContactsPage(),
+      
+    );
+  } 
+}
+
+class ContactsPage extends StatefulWidget{
+  @override
+  State<ContactsPage> createState() => _ContactsPageState();
+  
+}
+
+class _ContactsPageState extends State<ContactsPage>{
+ 
+  int contador = 0;
+  final contacts = [
+    Contact(name: "Ana Furtado", email: 'anaffurtado@hotmail.com', status: Icon(Icons.favorite_border), favorito: false),
+    Contact(name: "Maria Isabel", email: 'mariaisabel@gmail.com', status: Icon(Icons.favorite_border), favorito: false),
+    Contact(name: "Ana Laura", email: 'analaura@gmail.com', status: Icon(Icons.favorite_border), favorito: false),
+  ];
+  
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title:  Text('Contatos $contador')),
+      body: ListView.builder(
+        itemCount: contacts.length,
+        itemBuilder: (context, index){
+          return ListTile(
+            leading: CircleAvatar(child: Text(contacts[index].name[0])),
+            title: Text(contacts[index].name),
+            subtitle: Text(contacts[index].email),
+            trailing: IconButton(
+                icon: contacts[index].favorito ? Icon(Icons.favorite) : Icon(Icons.favorite_border) ,
+                      
+              
+              onPressed: () {
+                
+                setState(() {
+                     if(contacts[index].favorito) {
+                 contacts[index].favorito = false;
+                       contador--;
+               } else {
+                 contacts[index].favorito = true;
+                         contador++;
+               }
+                });
+            
+              },
+              
+                
+            
+            ),
+            
+          );
+        },
+      ),
+    );
+  }
+  
+  
+}
