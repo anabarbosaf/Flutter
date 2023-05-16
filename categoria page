@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
+
+import '../repository/categoria_repository.dart';
+
+class CategoriasPage extends StatefulWidget {
+  const CategoriasPage();
+
+  @override
+  State<CategoriasPage> createState() => _CategoriasPageState();
+}
+
+class _CategoriasPageState extends State<CategoriasPage> {
+  
+  
+  
+  @override
+  Widget build(BuildContext context) {
+    final categorias = CategoriaRepository().obterCategorias();
+    
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Categorias')),
+       body: ListView.builder(
+        itemCount: categorias.length,
+        itemBuilder: (context, index){
+          return ListTile(
+            leading: IconData(icon: Ionicons(categorias[index].icone)),
+            title: Text(categorias[index].nome),
+            trailing: Text(categorias[index].tipoTransacao.toString()),
+
+            ); 
+          
+        },
+        ),
+      );
+    
+  }
+}
