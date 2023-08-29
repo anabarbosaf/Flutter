@@ -1,0 +1,134 @@
+https://www.canva.com/design/DAFr1I_NSUg/Z66fjoXKGSNbwvrYDmmmAA/edit
+
+
+
+https://gist.githubusercontent.com/dcvieira/19cdbd65e1417de4d71ffeedbdafbdfe/raw/c459f581ad74ffd92087cf5c079de9dcf421d738/form_styling.dart
+
+
+https://gist.githubusercontent.com/dcvieira/19cdbd65e1417de4d71ffeedbdafbdfe/raw/c459f581ad74ffd92087cf5c079de9dcf421d738/form_controller_before.dart
+
+
+
+
+
+import 'package:flutter/material.dart';
+
+// clear()
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const appTitle = 'Form Demo';
+
+    return MaterialApp(
+      title: appTitle,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(appTitle),
+        ),
+        body: const MyCustomForm(),
+      ),
+    );
+  }
+}
+
+// Define a custom Form widget.
+class MyCustomForm extends StatefulWidget {
+  const MyCustomForm({Key? key}) : super(key: key);
+
+  @override
+  MyCustomFormState createState() {
+    return MyCustomFormState();
+  }
+}
+
+// Define a corresponding State class.
+// This class holds data related to the form.
+class MyCustomFormState extends State<MyCustomForm> {
+  final emailController = TextEditingController();
+  final senhaController = TextEditingController();
+
+  final _key = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    emailController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _key,
+      child: ListView(
+        padding: const EdgeInsets.all(32),
+        children: <Widget>[
+          buildEmail(),
+          const SizedBox(
+            height: 24,
+          ),
+          buildPassword(),
+          const SizedBox(
+            height: 24,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Acessar o form e verifica se é válido
+              final bool valido = _key.currentState!.validate();
+
+              if (valido) {
+                print('Email: ${emailController.text}');
+                print('Password: ${senhaController.text}');
+              }
+            },
+            child: const Text('Submit'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildEmail() => TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "email obrigatório";
+          }
+          return null;
+        },
+        controller: emailController,
+        decoration: InputDecoration(
+          hintText: 'name@example.com',
+          labelText: 'E-mail',
+          border: const OutlineInputBorder(),
+          prefixIcon: const Icon(Icons.email),
+          suffixIcon: emailController.text.isEmpty
+              ? null
+              : IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    // 1 limpar o valor do campo e-mail
+                    // 2 somente exibir o botão quando
+                    // o campo e-mail tiver algum valor
+                    emailController.clear();
+                  },
+                ),
+        ),
+        keyboardType: TextInputType.emailAddress,
+      );
+
+  Widget buildPassword() => TextField(
+        controller: senhaController,
+        obscureText: true,
+        decoration: const InputDecoration(
+          hintText: 'Your Password...',
+          labelText: 'Password',
+          border: OutlineInputBorder(),
+        ),
+      );
+}
