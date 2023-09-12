@@ -1,0 +1,136 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const appTitle = 'Form Demo';
+
+    return MaterialApp(
+      title: appTitle,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(appTitle),
+        ),
+        body: const MyCustomForm(),
+      ),
+    );
+  }
+}
+
+class LoginFormModel {
+  String email = '';
+  String password = '';
+}
+
+class MyCustomForm extends StatefulWidget {
+  const MyCustomForm({Key? key}) : super(key: key);
+
+  @override
+  MyCustomFormState createState() {
+    return MyCustomFormState();
+  }
+}
+
+class MyCustomFormState extends State<MyCustomForm> {
+  final emailController = TextEditingController();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final LoginFormModel _formData = LoginFormModel();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.all(32),
+        children: <Widget>[
+          buildEmail(),
+          const SizedBox(
+            height: 24,
+          ),
+          buildPassword(),
+          const SizedBox(
+            height: 24,
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                print('Email: ${_formData.email}');
+                print('Password: ${_formData.password}');
+
+                // Exibe uma mensagem de processamento fictícia por 2 segundos
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+
+                await Future.delayed(const Duration(seconds: 2));
+
+                // Após 2 segundos, você pode realizar a ação desejada, como redirecionar para outra tela
+                // Ou, você pode simplesmente fechar a mensagem de processamento.
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              }
+            },
+            child: const Text('Submit'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildEmail() => TextFormField(
+        controller: TextEditingController(text: _formData.email),
+        decoration: InputDecoration(
+          hintText: 'name@example.com',
+          labelText: 'E-mail',
+          border: const OutlineInputBorder(),
+          prefixIcon: const Icon(Icons.email),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              emailController.clear();
+              setState(() {
+                _formData.email = '';
+              });
+            },
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Por favor, insira um email válido';
+          }
+          return null;
+        },
+        onSaved: (value) {
+          _formData.email = value ?? '';
+        },
+        keyboardType: TextInputType.emailAddress,
+      );
+
+  Widget buildPassword() => TextFormField(
+        controller: TextEditingController(text: _formData.password),
+        obscureText: true,
+        decoration: const InputDecoration(
+          hintText: 'Your Password...',
+          labelText: 'Password',
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) {
+          if (value == null || value.length < 6) {
+            return 'A senha deve ter pelo menos 6 caracteres';
+          }
+          return null;
+        },
+        onSaved: (value) {
+          _formData.password = value ?? '';
+        },
+      );
+}
