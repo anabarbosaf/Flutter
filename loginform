@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const appTitle = 'Login e Saldo Demo';
+
+    return MaterialApp(
+      title: appTitle,
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(appTitle),
+        ),
+        body: MyLoginForm(),
+      ),
+    );
+  }
+}
+
+class MyLoginForm extends StatefulWidget {
+  @override
+  MyLoginFormState createState() => MyLoginFormState();
+}
+
+class MyLoginFormState extends State<MyLoginForm> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  String message = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextField(
+            controller: emailController,
+            decoration: InputDecoration(
+              hintText: 'E-mail',
+              labelText: 'E-mail',
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          TextField(
+            controller: passwordController,
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: 'Senha',
+              labelText: 'Senha',
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: () async {
+              final result = await validateUser(
+                emailController.text,
+                passwordController.text,
+              );
+
+              setState(() {
+                message = result;
+              });
+            },
+            child: const Text('Login'),
+          ),
+          const SizedBox(height: 16.0),
+          Text(message),
+        ],
+      ),
+    );
+  }
+
+  Future<String> validateUser(String email, String password) async {
+    // Simule a validação do usuário assincronamente
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (email == 'usuario@example.com' && password == 'senha123') {
+      // Se as credenciais estiverem corretas, retorne uma mensagem com o saldo do usuário
+      return 'Login bem-sucedido! Saldo: \$1000';
+    } else {
+      // Se as credenciais estiverem erradas, retorne uma mensagem de erro
+      return 'Credenciais inválidas. Tente novamente.';
+    }
+  }
+}
